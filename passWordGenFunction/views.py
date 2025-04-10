@@ -4,13 +4,36 @@ import random
 # Create your views here.
 
 def home(request):
-    return HttpResponse('<h1>Hello World,</h1> This is my first Django Project')
+    return render(request,'home.html')
 
 def passGen(request):
-    characters = list('qwertyuiopasdfghjklzxcvbnm')
+    characters = list('abcdefghijklmnopqrstuvwxyz')
     password = ""
-    for i in range(15):
-        ch = random.choice(characters)
-        password += ch
-    pas = {'password':password}
-    return JsonResponse(pas)
+
+   
+    length = request.GET.get('length')
+    special_chars = request.GET.get('special_chars')  # "on" hoặc None
+    uppercase = request.GET.get('uppercase')
+    havingDigits = request.GET.get('havingDigits')
+
+    # Chuyển length sang int
+    try:
+        length = int(length)
+    except (TypeError, ValueError):
+        length = 0  # xử lý nếu không hợp lệ
+
+    
+    if uppercase == "on":
+        characters += list('ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+    if special_chars == "on":
+        characters += list('!@#$%^&*()-_=+[]{};:,.<>?/')
+    if havingDigits == "on":
+        characters += list('0123456789')
+
+   
+    if length > 0:
+        password = ''.join(random.choice(characters) for _ in range(length))
+    else:
+        password = "Độ dài không hợp lệ!"
+
+    return render(request, 'password.html', {'password': password})

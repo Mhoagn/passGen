@@ -20,6 +20,6 @@ from passWordGenFunction import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('',views.home),
-    path('passwordGen/',views.passGen)
+    path('',views.home,name='homepage'),
+    path('passwordGen/',views.passGen,name='password')
 ]
